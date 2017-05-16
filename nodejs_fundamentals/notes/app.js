@@ -4,7 +4,28 @@ const yargs = require('yargs');
 
 const notes = require('./notes');
 
-const argv = yargs.argv;
+const titleArg = {
+  describe: 'Title of note',
+  demand: true,
+  alias: 't'
+};
+
+const bodyArg = {
+  describe: 'Note content',
+  demand: true,
+  alias: 'b'
+};
+
+const argv = yargs
+  .command('add', 'Add a new note', { 
+    title: titleArg, 
+    body: bodyArg 
+  })
+  .command('list', 'List all notes')
+  .command('read', 'Read a note', { title: titleArg })
+  .command('remove', 'Deletes a note', { title: titleArg })
+  .help()
+  .argv;
 const command = argv._[0];
 
 switch(command) {
@@ -37,7 +58,7 @@ switch(command) {
     break;
   }
 
-  case 'delete':
+  case 'remove':
     const noteRemoved = notes.removeNote(argv.title);
     const message = noteRemoved
       ? `Note was removed: "${argv.title}"`
